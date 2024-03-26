@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reveal - Parameters and Stored Procs</title>
+</head>
+
+<body>
+
+
+    <select name="orders" id="orderId">
+        <option value="10248">10248</option>
+        <option value="10249">10249</option>
+        <option value="10250">10250</option>
+        <option value="10251">10251</option>
+        <option value="10252">10252</option>
+        <option value="10253">10253</option>
+        <option value="10254">10254</option>
+        <option value="10255">10255</option>
+    </select>
+
+      <select name="employee" id="employeeId">
+        <option value="1">Nancy Davolio</option>
+        <option value="2">Andrew Fuller</option>
+        <option value="3">Janet Leverling</option>
+        <option value="4">Margaret Peacock</option>
+        <option value="5">Steven Buchanan</option>
+        <option value="6">Michael Suyama</option>
+        <option value="7">Robert King</option>
+        <option value="8">Laura Callahan</option>
+        <option value="9">Anne Dodsworth</option>
+      </select>
+
+    <select name="customers" id="customerId">
+        <option value="ALFKI">ALFKI</option>
+        <option value="ANATR">ANATR</option>
+        <option value="ANTON">ANTON</option>
+        <option value="AROUT">AROUT</option>
+        <option value="BERGS">BERGS</option>
+        <option value="BLAUS">BLAUS</option>
+        <option value="BLONP">BLONP</option>
+        <option value="BOLID">BOLID</option>
+        <option value="BONAP">BONAP</option>
+        <option value="BOTTM">BOTTM</option>
+        <option value="BSBEV">BSBEV</option>
+        <option value="CACTU">CACTU</option>
+        <option value="CENTC">CENTC</option>
+        <option value="CHOPS">CHOPS</option>
+        <option value="COMMI">COMMI</option>
+        <option value="CONSH">CONSH</option>
+        <option value="DRACD">DRACD</option>
+        <option value="DUMON">DUMON</option>
+        <option value="EASTC">EASTC</option>
+        <option value="ERNSH">ERNSH</option>
+      </select>
+      
+    <div id="revealView" style="height: 920px; width: 100%;"></div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
+    <script src="https://dl.revealbi.io/reveal/libs/1.6.4/infragistics.reveal.js"></script>
+
+    <script type="text/javascript">
+        $.ig.RevealSdkSettings.setBaseUrl("https://localhost:7006/");
+
+        $.ig.RevealSdkSettings.setAdditionalHeadersProvider(function (url) {
+            return headers;
+        });
+
+        const headers = {};
+
+        var revealView = new $.ig.RevealView("#revealView");
+        revealView.interactiveFilteringEnabled = true;
+        revealView.startInEditMode = true;  
+
+        revealView.onDataSourcesRequested = (callback) => {    
+
+            // Set values to pass to server
+            var selectedCustomerId = $('#customerId').val();
+            headers["x-header-customerId"] = selectedCustomerId;
+
+            var selectedOrderId = $('#orderId').val();
+            headers["x-header-orderId"] = selectedOrderId;
+
+            var selectedEmployeeId = $('#employeeId').val();
+            headers["x-header-employeeId"] = selectedEmployeeId;
+
+            // What am I passing to the server
+            console.log(headers);
+
+            // create my data source
+            var ds = new $.ig.RVAzureSqlDataSource();
+            ds.id="sqlServer";
+            ds.title = "SQL Server Data Source";
+            ds.subtitle = "Full Northwind Database";
+
+            callback(new $.ig.RevealDataSources([ds], [ ], false));        
+        };     
+    </script>
+</body>
+</html>
